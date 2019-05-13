@@ -1,0 +1,111 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "uni-app"
+			}
+		}
+	    ,{
+            "path" : "pages/lunbo/lunbo",
+            "style" : {
+				"navigationBarTitleText": "轮播图"
+			}
+        }
+        ,{
+            "path" : "pages/picker/picker",
+            "style" : {
+				"navigationBarTitleText": "picker"
+			}
+        }
+        ,{
+            "path" : "pages/tabs/tabs",
+            "style" : {
+				"navigationBarTitleText": "选项卡"
+			}
+        }
+        ,{
+            "path" : "pages/datas/datas",
+             "style" : {
+            "navigationBarTitleText" : "下拉刷新上拉加载",
+            "enablePullDownRefresh" : true, // 不开启下拉刷新, 默认就是false
+            "onReachBottomDistance" : 100 // 页面上拉触底事件触发时距页面底部距离, 默认 50
+        }
+        }
+        ,{
+            "path" : "pages/filter/filter",
+            "style" : {
+				"navigationBarTitleText": "筛选"
+			}
+        }
+        ,{
+            "path" : "pages/user/user",
+            "style" : {
+				"navigationBarTitleText": "我的",
+				"app-plus": {
+					"bounce": "none",
+					"titleNView": {
+						"type": "transparent",
+						"buttons": [{
+								"fontSrc": "/static/yticon.ttf",
+								"text": "\ue60f",
+								"fontSize": "24",
+								"color": "#303133",
+								"width": "46px",
+								"background": "rgba(0,0,0,0)"
+							},
+							{
+								"fontSrc": "/static/yticon.ttf",
+								"text": "\ue744",
+								"fontSize": "28",
+								"color": "#303133",
+								"background": "rgba(0,0,0,0)"
+								// "redDot": true
+							}
+						]
+					}
+				}
+			}
+        }
+        ,{
+            "path" : "pages/animation/animation",
+            "style" : {
+				"navigationBarTitleText": "动画"
+			}
+        }
+        ,{
+            "path" : "pages/order/order",
+            "style" : {
+				"navigationBarTitleText": "订单",
+				"enablePullDownRefresh" : true // 不开启下拉刷新, 默认就是false
+			}
+        }
+        ,{
+            "path" : "pages/upImage/upImage",
+            "style" : {
+				"navigationBarTitleText": "图片上传"
+			}
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#C0C4CC",
+		"selectedColor": "#fa436a",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [{
+				"pagePath": "pages/index/index",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/user/user",
+				"text": "我的"
+			}
+		]
+	}
+}
