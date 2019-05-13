@@ -38,7 +38,7 @@
 				</scroll-view>
 			</swiper-item>
 		</swiper>
-		<view class="" @click="goTop()">test</view>
+		<view class="toTop" @longTap="goTop()" v-show='show'><image src="../../static/top.png" mode="aspectFill"></image></view>
 	</view>
 </template>
 
@@ -56,6 +56,7 @@ export default {
 	data() {
 		return {
 			current: 0,
+			show:false,//返回顶部按钮是否显示
 			loadingType:'more',
 			orderList:[],
 			navList: ['全部', '已完成', '待付款', '待发货', '待收货'],
@@ -115,9 +116,17 @@ export default {
 				// console.log(vm.orderList);
 			})
 		},
+		// 监听滑块滚动
 		scroll: function(e) {
-            this.old.scrollTop = e.detail.scrollTop
+            this.old.scrollTop = e.detail.scrollTop;
+			// 显示隐藏返回顶部按钮
+			if(e.detail.scrollTop > 100){
+				this.show = true;
+			}else{
+				this.show = false;
+			}
         },
+		// 返回顶部
 		goTop: function(e) {
             this.scrollTop = this.old.scrollTop;
 			this.scrollTop = 0;
@@ -158,6 +167,7 @@ export default {
 	$border-color1:#DCDFE6;
 page,
 .content {
+	position: relative;
 	background: $page-color-base;
 	height: 100%;
 }
@@ -289,5 +299,15 @@ page,
 		}
 	}
 }
-
+.toTop{
+	position: fixed;
+	right: 20upx;
+	bottom: 20upx;
+	width: 90upx;
+	height: 90upx;
+	image{
+		width: 100%;
+		height: 100%;
+	}
+}
 </style>
