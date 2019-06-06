@@ -8,6 +8,11 @@
 		<view class="item" @click="toURL('animation/animation')">动画</view>
 		<view class="item" @click="toURL('order/order')">订单</view>
 		<view class="item" @click="toURL('upImage/upImage')">图片上传</view>
+		<view class="item" @click="toURL('taobao/taobao')">授权登录</view>
+		<view class="item" @click="toURL('scan/scan')">扫码</view>
+		<view class="item" @click="toURL('bottomPop/bottomPop')">底部弹窗</view>
+		<view class="item" @click="toURL('panel/panel')">分类标签</view>
+		<view class="item" @click="toURL('test/test')">测试</view>
 	</view>
 </template>
 

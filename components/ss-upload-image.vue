@@ -53,28 +53,34 @@
       }
     },
     data() {
-      return {}
+      return {
+			}
     },
     methods: {
       chooseImage() {
+				let vm = this;
         uni.chooseImage({
+					count:vm.limit,
           success: (chooseImageRes) => {
-            const uploadTask = uni.uploadFile({
-              url: this.url,
-              name: this.name,
-              filePath: chooseImageRes.tempFilePaths[0],
-              formData: this.formData,
-              header: this.header,
-              success: (uploadFileRes) => {
-                this.$emit('on-success', JSON.parse(uploadFileRes.data))
-              },
-              fail: (err) => {
-                this.$emit('on-error', err)
-              }
-            })
-            uploadTask.onProgressUpdate((res) => {
-              this.$emit('on-process', res)
-            })
+						chooseImageRes.tempFilePaths.forEach(function(item,index){
+							const uploadTask = uni.uploadFile({
+							  url: vm.url,
+							  name: vm.name,
+							  filePath: item,
+							  formData: vm.formData,
+							  header: vm.header,
+							  success: (uploadFileRes) => {
+							    vm.$emit('on-success', JSON.parse(uploadFileRes.data))
+							  },
+							  fail: (err) => {
+							    vm.$emit('on-error', err)
+							  }
+							})
+							uploadTask.onProgressUpdate((res) => {
+							  vm.$emit('on-process', res)
+							})
+						})
+            
           }
         })
       },

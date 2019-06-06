@@ -49,22 +49,7 @@
             /* ios打包配置 */
             "sdkConfigs" : {}
         },
-        "nativePlugins" : {
-            "dasu-alibaichuan" : {
-                "__plugin_info__" : {
-                    "name" : "阿里百川支持安卓ios - [试用版，仅用于自定义基座]",
-                    "description" : "阿里百川支持安卓ios",
-                    "platforms" : "Android,iOS",
-                    "url" : "https://ext.dcloud.net.cn/plugin?id=384",
-                    "android_package_name" : "",
-                    "ios_bundle_id" : "",
-                    "isCloud" : true,
-                    "bought" : 0,
-                    "pid" : "384",
-                    "parameters" : {}
-                }
-            }
-        }
+        "nativePlugins" : {}
     },
     /* SDK配置 */
     "quickapp" : {},

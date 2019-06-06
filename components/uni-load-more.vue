@@ -20,7 +20,7 @@
 				<view :style="{background:color}"></view>
 			</view>
 		</view>
-		<text class="uni-load-more__text" :style="{color:color}">{{status === 'more' ? contentText.contentdown : (status === 'loading' ? contentText.contentrefresh : contentText.contentnomore)}}</text>
+		<text class="uni-load-more__text" :style="{color:color}">{{status === 'more' ? contentText.contentdown : (status === 'loading' ? contentText.contentrefresh : (status === 'noMore' ? contentText.contentnomore : contentText.contentnull))}}</text>
 	</view>
 </template>
 
@@ -47,7 +47,8 @@
 					return {
 						contentdown: "上拉显示更多",
 						contentrefresh: "正在加载...",
-						contentnomore: "没有更多数据了"
+						contentnomore: "没有更多数据了",
+						contentnull:' ',
 					};
 				}
 			}

@@ -26,11 +26,11 @@
         }
         ,{
             "path" : "pages/datas/datas",
-             "style" : {
+            "style" : {
             "navigationBarTitleText" : "下拉刷新上拉加载",
             "enablePullDownRefresh" : true, // 不开启下拉刷新, 默认就是false
             "onReachBottomDistance" : 100 // 页面上拉触底事件触发时距页面底部距离, 默认 50
-        }
+			}
         }
         ,{
             "path" : "pages/filter/filter",
@@ -76,8 +76,7 @@
         ,{
             "path" : "pages/order/order",
             "style" : {
-				"navigationBarTitleText": "订单",
-				"enablePullDownRefresh" : true // 不开启下拉刷新, 默认就是false
+				"navigationBarTitleText": "订单"
 			}
         }
         ,{
@@ -85,6 +84,32 @@
             "style" : {
 				"navigationBarTitleText": "图片上传"
 			}
+        }
+        ,{
+            "path" : "pages/taobao/taobao",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/scan/scan",
+            "style" : {
+				"navigationBarTitleText": "扫码"
+			}
+        }
+        ,{
+            "path" : "pages/bottomPop/bottomPop",
+            "style" : {
+				"navigationBarTitleText": "底部上滑弹窗"
+			}
+        }
+        ,{
+            "path" : "pages/panel/panel",
+            "style" : {
+				"navigationBarTitleText": "分类标签"
+			}
+        }
+        ,{
+            "path" : "pages/test/test",
+            "style" : {}
         }
     ],
 	"globalStyle": {

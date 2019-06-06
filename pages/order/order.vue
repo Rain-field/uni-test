@@ -6,7 +6,6 @@
 		<swiper :current="current" class="swiper-box" duration="300" @change="changeTab">
 			<swiper-item class="tab-content" v-for="(tabItem, tabIndex) in navList" :key="tabIndex">
 				<scroll-view :scroll-top="scrollTop" class="list-scroll-content" scroll-y @scroll="scroll" @scrolltolower="loadData">
-					<!-- 空白页 -->
 					<empty v-if="orderList.length === 0"></empty>
 					<view class="order-item" v-for="(item,index) in orderList" :key="index">
 						<view class="order-top">
@@ -38,7 +37,7 @@
 				</scroll-view>
 			</swiper-item>
 		</swiper>
-		<view class="toTop" @longTap="goTop()" v-show='show'><image src="../../static/top.png" mode="aspectFill"></image></view>
+		<view class="toTop" @tap="goTop()" v-show='show'><image src="../../static/top.png" mode="aspectFill"></image></view>
 	</view>
 </template>
 
@@ -84,21 +83,21 @@ export default {
 				userid: '26454',
 				type:index,
 				pageNo: page,
-				pageSize: 5
+				pageSize: 10
 			};
-			let newIndex = 5*(page-1);//请求新一页的数据使用累加索引
+			let newIndex = 10*(page-1);//请求新一页的数据使用累加索引
 			this.apis.order_list(dataA).then(res=>{
 				count = res.count;
 				res = res.data[0];
 				// console.log(res);
+			// 如果列表项大于10才显示加载状态
+			if(count>=10){
+				vm.loadingType = 'loading';
+			}else{
+				vm.loadingType = 'null';
+			}
 				
-				if(count>5){
-					vm.loadingType = 'loading';
-				}else{
-					vm.loadingType = 'noMore';
-				}
-				
-				// 处理数据为一个新数组
+				// 处理数据为一个新数组xu
 				res.oeder.forEach(function(item,index,_this){
 					vm.orderList.push(item);
 					vm.orderList[index+newIndex].data = [];
@@ -110,17 +109,18 @@ export default {
 						}
 					}
 				}
-				setTimeout(function() {
-					uni.stopPullDownRefresh();
-				}, 0);
 				// console.log(vm.orderList);
+				// 获取完数据后恢复状态
+				if(vm.loadingType == 'loading'){
+					vm.loadingType = 'more';
+				}
 			})
 		},
 		// 监听滑块滚动
 		scroll: function(e) {
             this.old.scrollTop = e.detail.scrollTop;
 			// 显示隐藏返回顶部按钮
-			if(e.detail.scrollTop > 100){
+			if(e.detail.scrollTop > 120){
 				this.show = true;
 			}else{
 				this.show = false;
@@ -154,12 +154,12 @@ export default {
 	onLoad() {
 		this.getDatas(1);
 	},
-	// 下拉刷新
-	onPullDownRefresh: function() {
-		this.orderList = [];
-		page = 1;
-		this.getDatas(this.current+1);
-	}
+	// // 下拉刷新
+	// onPullDownRefresh: function() {
+	// 	this.orderList = [];
+	// 	page = 1;
+	// 	this.getDatas(this.current+1,true);
+	// }
 };
 </script>
 

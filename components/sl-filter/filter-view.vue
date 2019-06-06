@@ -5,19 +5,17 @@
 				<view v-if="item.isSort">
 					<view class="filter-content-list">
 						<view v-for="(detailItem,idx) in selectDetailList" :key="idx" :class="detailItem.isSelected?'filter-content-list-item-active':'filter-content-list-item-default'"
-						 :style="{'color': detailItem.isSelected?themeColor:'#666666'}" 
-						 @tap="sortTap(idx,selectDetailList,item.key)">
+						 :style="{'color': detailItem.isSelected?themeColor:'#666666'}" @tap="sortTap(idx,selectDetailList,item.key)">
 							<text>{{detailItem.title}}</text>
 						</view>
 					</view>
 				</view>
 				<view v-else>
-					<view class="filter-content-title" v-if="item.detailTitle.length">
+					<view class="filter-content-title" v-if="item.detailTitle && item.detailTitle.length">
 						<text>{{item.detailTitle}}</text>
 					</view>
 					<view class="filter-content-detail">
-						<text v-for="(detailItem,idx) in selectDetailList" :key="idx" class='filter-content-detail-item-default' 
-						:style="{'background-color':detailItem.isSelected?themeColor:'#FFFFFF','color':detailItem.isSelected?'#FFFFFF':'#666666'}"
+						<text v-for="(detailItem,idx) in selectDetailList" :key="idx" class='filter-content-detail-item-default' :style="{'background-color':detailItem.isSelected?themeColor:'#FFFFFF','color':detailItem.isSelected?'#FFFFFF':'#666666'}"
 						 @tap="itemTap(idx,selectDetailList,item.isMutiple,item.key)">
 							{{detailItem.title}}
 						</text>
@@ -43,7 +41,9 @@
 				selectArr: [],
 				result: {},
 				menuIndex: 0,
-				selectDetailList: []
+				selectDetailList: [],
+				independenceObj: {},
+				selectedKey: ''
 			};
 		},
 		props: {
@@ -58,28 +58,55 @@
 				default () {
 					return []
 				}
+			},
+			independence: {
+				type: Boolean,
+				default: false
 			}
 		},
-		computed:{
+		computed: {
 			selectedObj() {
 				let obj = {}
-				for (let i = 0;i < this.menuList.length;i++) {
+				for (let i = 0; i < this.menuList.length; i++) {
 					let item = this.menuList[i];
 					if (item.isMutiple) {
 						obj[item.key] = [];
-					} else{
+					} else {
 						obj[item.key] = '';
 					}
 				}
-				return obj;
+				return obj
 			}
 		},
 		methods: {
 			menuTabClick(index) {
 				this.menuIndex = index;
-				this.selectDetailList = this.menuList[index].detailList
+				this.selectDetailList = this.menuList[index].detailList;
+				// 如果是独立菜单
+				if (this.independence) {
+					this.selectedKey = this.menuList[index].key;
+					if (JSON.stringify(this.independenceObj) == '{}') {
+						this.initIndependenceObj(index);
+					} else {
+						for (let key in this.independenceObj) {
+							if (key != this.selectedKey) {
+								this.initIndependenceObj(index);
+								this.resetSelected(this.menuList[index].detailList,this.selectedKey);
+							}
+						}
+					}
+				}
+			},
+			initIndependenceObj(index) {
+				this.independenceObj = {};
+				if (this.menuList[index].isMutiple) {
+					this.independenceObj[this.selectedKey] = [];
+				} else {
+					this.independenceObj[this.selectedKey] = '';
+				}
 			},
 			itemTap(index, list, isMutiple, key) {
+
 				if (isMutiple == true) {
 					list[index].isSelected = !list[index].isSelected;
 					if (index == 0) {
@@ -87,21 +114,42 @@
 					} else {
 						list[0].isSelected = false
 						if (list[index].isSelected) {
-							this.selectedObj[key].push(list[index].value);
+							if (this.independence) {
+								this.independenceObj[this.selectedKey].push(list[index].value);
+							} else {
+								this.selectedObj[key].push(list[index].value);
+							}
 						} else {
 							list[index].isSelected = false;
-							var idx = this.selectedObj[key].indexOf(list[index].value);
-							this.selectedObj[key].splice(idx, 1);
+							if (this.independence) {
+								var idx = this.independenceObj[this.selectedKey].indexOf(list[index].value);
+								this.independenceObj[this.selectedKey].splice(idx, 1);
+							} else {
+								var idx = this.selectedObj[key].indexOf(list[index].value);
+								this.selectedObj[key].splice(idx, 1);
+							}
+
 						}
-						this.result = this.selectedObj;
+						if (this.independence) {
+							this.result = this.independenceObj;
+						} else {
+							this.result = this.selectedObj;
+						}
+
 					}
 				} else {
 					if (index == 0) {
 						this.resetSelected(list, key)
 					} else {
 						list[0].isSelected = false
-						this.selectedObj[key] = list[index].value;
-						this.result = this.selectedObj;
+						if (this.independence) {
+							this.independenceObj[this.selectedKey] = list[index].value;
+							this.result = this.independenceObj;
+						} else {
+							this.selectedObj[key] = list[index].value;
+							this.result = this.selectedObj;
+						}
+
 						for (let i = 0; i < list.length; i++) {
 							if (index == i) {
 								list[i].isSelected = true
@@ -111,11 +159,14 @@
 						}
 					}
 				}
+				// #ifdef H5
+				this.$forceUpdate();
+				// #endif
 			},
 			resetSelected(list, key) {
 				if (typeof this.result[key] == 'object') {
 					this.result[key] = [];
-				} else{
+				} else {
 					this.result[key] = '';
 				}
 				for (let i = 0; i < list.length; i++) {
@@ -125,9 +176,18 @@
 						list[i].isSelected = false;
 					}
 				}
+				// #ifdef H5
+				this.$forceUpdate();
+				// #endif
 			},
 			sortTap(index, list, key) {
-				this.result[key] = list[index].value;
+				if (this.independence) {
+					this.independenceObj[this.selectedKey] = list[index].value;
+					this.result = this.independenceObj;
+				} else{
+					this.result[key] = list[index].value;
+				}
+				
 				for (let i = 0; i < list.length; i++) {
 					if (index == i) {
 						list[i].isSelected = true;
@@ -140,8 +200,8 @@
 			sureClick() {
 				this.$emit("confirm", this.result);
 			},
-			resetClick(list,key) {
-				this.resetSelected(list,key)
+			resetClick(list, key) {
+				this.resetSelected(list, key)
 			}
 		}
 	}
@@ -171,6 +231,7 @@
 		margin-right: 10px;
 		margin-top: 10px;
 		display: inline-block;
+		font-size: 14px;
 	}
 
 	.filter-content-detail-item-default {
@@ -181,6 +242,7 @@
 		margin-right: 10px;
 		margin-top: 10px;
 		display: inline-block;
+		font-size: 14px;
 	}
 
 	.filter-content-footer {
@@ -196,6 +258,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		font-size: 16px;
 	}
 
 	.filter-content-list {
@@ -211,7 +274,7 @@
 
 	.filter-content-list-item-default text {
 		width: 90%;
-		font-size: 16px;
+		font-size: 14px;
 		display: inline-block;
 	}
 
@@ -222,7 +285,7 @@
 	}
 
 	.filter-content-list-item-active text {
-		font-size: 16px;
+		font-size: 14px;
 		width: 90%;
 		display: inline-block;
 	}
